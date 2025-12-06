@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flexible Task Flow</title>
+<style>
+  :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; }
+  body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); max-width: 600px; margin: 0 auto; padding: 20px; }
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+  .tab { padding: 8px 16px; border-radius: 20px; cursor: pointer; background: #e2e8f0; border: none; }
+  .tab.active { background: var(--primary); color: white; }
+  .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+  .card input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+  .card.done span { text-decoration: line-through; color: #94a3b8; }
+  .fab { position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: white; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>My Flow</h1>
+  <span style="font-size: 0.9em; color: #64748b;">Dec 06</span>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showView('today')">Today</button>
+  <button class="tab" onclick="showView('backlog')">Backlog</button>
+</div>
+
+<div id="today-view">
+  <div class="card"><input type="checkbox" onclick="toggleTask(this)"> <span>Wash clothes (Suggested)</span></div>
+  <div class="card"><input type="checkbox" onclick="toggleTask(this)"> <span>Go for a walk</span></div>
+</div>
+
+<div id="backlog-view" style="display:none;">
+  <div class="card"><span>Clean toilet</span> <button onclick="moveToToday(this)" style="margin-left:auto; font-size:0.8em;">+ Today</button></div>
+  <div class="card"><span>Organize files</span> <button onclick="moveToToday(this)" style="margin-left:auto; font-size:0.8em;">+ Today</button></div>
+</div>
+
+<div class="fab" onclick="alert('Add new task modal would open here')">+</div>
+
+<script>
+  function showView(view) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('today-view').style.display = view === 'today' ? 'block' : 'none';
+    document.getElementById('backlog-view').style.display = view === 'backlog' ? 'block' : 'none';
+  }
+  function toggleTask(cb) { cb.parentElement.classList.toggle('done'); }
+  function moveToToday(btn) {
+    const text = btn.parentElement.querySelector('span').innerText;
+    const html = `<div class="card"><input type="checkbox" onclick="toggleTask(this)"> <span>${text}</span></div>`;
+    document.getElementById('today-view').insertAdjacentHTML('beforeend', html);
+    btn.parentElement.remove();
+    alert('Moved to Today!');
+  }
+</script>
+</body>
+</html>
