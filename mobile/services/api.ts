@@ -1,3 +1,5 @@
+import { Task, SuggestedTask, Completion, AnalyticsInsight, DailyCompletion, WeeklyCompletion, HeatmapDataPoint, Streak, CategoryBreakdown } from '../types';
+
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
 
 class ApiClient {
@@ -33,27 +35,27 @@ class ApiClient {
   }
 
   // Tasks
-  async getTasks() {
-    return this.request<any[]>('/tasks');
+  async getTasks(): Promise<Task[]> {
+    return this.request<Task[]>('/tasks');
   }
 
-  async getWeeklyBacklog() {
-    return this.request<any[]>('/tasks/backlog');
+  async getWeeklyBacklog(): Promise<Task[]> {
+    return this.request<Task[]>('/tasks/backlog');
   }
 
-  async getSuggestedTasks() {
-    return this.request<any[]>('/tasks/suggested');
+  async getSuggestedTasks(): Promise<SuggestedTask[]> {
+    return this.request<SuggestedTask[]>('/tasks/suggested');
   }
 
-  async createTask(data: { title: string; category?: string; isWeeklyBacklog?: boolean }) {
-    return this.request<any>('/tasks', {
+  async createTask(data: { title: string; category?: string; isWeeklyBacklog?: boolean }): Promise<Task> {
+    return this.request<Task>('/tasks', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
-  async updateTask(id: number, data: Partial<any>) {
-    return this.request<any>(`/tasks/${id}`, {
+  async updateTask(id: number, data: Partial<Task>): Promise<Task> {
+    return this.request<Task>(`/tasks/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });
@@ -66,59 +68,59 @@ class ApiClient {
   }
 
   // Completions
-  async getCompletions(startDate?: string, endDate?: string) {
+  async getCompletions(startDate?: string, endDate?: string): Promise<Completion[]> {
     const params = new URLSearchParams();
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
     const query = params.toString();
-    return this.request<any[]>(`/completions${query ? `?${query}` : ''}`);
+    return this.request<Completion[]>(`/completions${query ? `?${query}` : ''}`);
   }
 
-  async createCompletion(data: { taskId: number; timeOfDay?: string; notes?: string }) {
-    return this.request<any>('/completions', {
+  async createCompletion(data: { taskId: number; timeOfDay?: string; notes?: string }): Promise<Completion> {
+    return this.request<Completion>('/completions', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
-  async deleteCompletion(id: number) {
+  async deleteCompletion(id: number): Promise<void> {
     return this.request<void>(`/completions/${id}`, {
       method: 'DELETE',
     });
   }
 
-  async addTaskNote(data: { completionId: number; content: string }) {
-    return this.request<any>('/completions/notes', {
+  async addTaskNote(data: { completionId: number; content: string }): Promise<void> {
+    return this.request<void>('/completions/notes', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
   // Analytics
-  async getAnalytics() {
-    return this.request<any>('/analytics');
+  async getAnalytics(): Promise<AnalyticsInsight> {
+    return this.request<AnalyticsInsight>('/analytics');
   }
 
-  async getDailyAnalytics(days?: number) {
+  async getDailyAnalytics(days?: number): Promise<DailyCompletion[]> {
     const query = days ? `?days=${days}` : '';
-    return this.request<any[]>(`/analytics/daily${query}`);
+    return this.request<DailyCompletion[]>(`/analytics/daily${query}`);
   }
 
-  async getWeeklyAnalytics(weeks?: number) {
+  async getWeeklyAnalytics(weeks?: number): Promise<WeeklyCompletion[]> {
     const query = weeks ? `?weeks=${weeks}` : '';
-    return this.request<any[]>(`/analytics/weekly${query}`);
+    return this.request<WeeklyCompletion[]>(`/analytics/weekly${query}`);
   }
 
-  async getHeatmap() {
-    return this.request<any[]>('/analytics/heatmap');
+  async getHeatmap(): Promise<HeatmapDataPoint[]> {
+    return this.request<HeatmapDataPoint[]>('/analytics/heatmap');
   }
 
-  async getStreaks() {
-    return this.request<any[]>('/analytics/streaks');
+  async getStreaks(): Promise<Streak[]> {
+    return this.request<Streak[]>('/analytics/streaks');
   }
 
-  async getCategories() {
-    return this.request<any[]>('/analytics/categories');
+  async getCategories(): Promise<CategoryBreakdown[]> {
+    return this.request<CategoryBreakdown[]>('/analytics/categories');
   }
 }
 

@@ -93,6 +93,8 @@ createdb angie_todo
 # TypeORM will auto-sync in development mode
 ```
 
+**📖 For detailed PostgreSQL setup instructions, see [SETUP.md](SETUP.md) - Step 2**
+
 6. Start the backend:
 ```bash
 npm run start:dev
